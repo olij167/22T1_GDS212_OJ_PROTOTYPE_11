@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a85a9f8451ffca14a969b2f511b25359, type: 3}
+  m_Name: SprintTutorial
+  m_EditorClassIdentifier: 
+  tutorialIcon: {fileID: 0}
+  tutorialInstructions: 'Sprint with Left Shift '
+  tutorialStepComplete: 0
+  isLookAroundTutorial: 0
+  voiceOver: {fileID: 8300000, guid: 0bb9558736185d04d8990a28778df270, type: 3}
+  tutorialInputList: 30010000
