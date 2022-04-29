@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Fire
   - MotherDuck
+  - Food
+  - InterestingObject
+  - WanderWaypoint
   layers:
   - Default
   - TransparentFX

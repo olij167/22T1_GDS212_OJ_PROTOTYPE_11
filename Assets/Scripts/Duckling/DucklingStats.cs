@@ -1,18 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BehaviorDesigner.Runtime;
 
 public class DucklingStats : MonoBehaviour
 {
-    public float affection = 100f, affectionTimerDecrease;
+    //public BehaviorTree behaviorTree;
 
-    public float energy = 100f, energyTimerDecrease;
+    public float affection = 100f, affectionTimerDecrease, affectionReplenishRate;
 
-    public float hunger = 100f, hungerTimerDecrease;
+    public float energy = 100f, energyTimerDecrease, energyReplenishRate;
 
-    public float cleanliness = 100f, cleanlinessTimerDecrease;
+    public float hunger = 100f, hungerTimerDecrease, hungerReplenishRate;
+
+    public float interest = 0f, interestTimerDecrease, interestReplenishRate;
 
     //public float energyTimerReset, hungerTimerReset, cleanlinessTimerReset, affectionTimerReset;
+
+    private void Start()
+    {
+        
+    }
 
     void Update()
     {
@@ -25,9 +33,37 @@ public class DucklingStats : MonoBehaviour
         CleanlinessTimer();
     }
 
+    //public string GetLowestStat(string lowestStatName)
+    //{
+    //    float lowestStat = Mathf.Min(affection, energy, hunger, interest);
+
+    //    if (lowestStat == affection)
+    //    {
+    //        return lowestStatName = "affection";
+    //    }
+
+    //    if (lowestStat == energy)
+    //    {
+    //        return lowestStatName = "energy";
+    //    }
+
+    //    if (lowestStat == hunger)
+    //    {
+    //        return lowestStatName = "hunger";
+    //    }
+
+    //    if (lowestStat == interest)
+    //    {
+    //        return lowestStatName = "interest";
+    //    }
+
+
+    //}
+
     void AffectionTimer()
     {
         affection -= Time.deltaTime * affectionTimerDecrease;
+        //behaviorTree.SetVariable("affection", (SharedFloat)affection);
 
         if (affection <= 0f)
         {
@@ -38,6 +74,8 @@ public class DucklingStats : MonoBehaviour
     void EnergyTimer()
     {
         energy -= Time.deltaTime * energyTimerDecrease;
+        //behaviorTree.SetVariable("energy", (SharedFloat)energy);
+
 
         if (energy <= 0f)
         {
@@ -48,6 +86,8 @@ public class DucklingStats : MonoBehaviour
     void HungerTimer()
     {
         hunger -= Time.deltaTime * hungerTimerDecrease;
+        //behaviorTree.SetVariable("hunger", (SharedFloat)hunger);
+
 
         if (hunger <= 0f)
         {
@@ -57,11 +97,13 @@ public class DucklingStats : MonoBehaviour
 
     void CleanlinessTimer()
     {
-        cleanliness -= Time.deltaTime * cleanlinessTimerDecrease;
+        interest += Time.deltaTime * interestTimerDecrease;
+        //behaviorTree.SetVariable("cleanliness", (SharedFloat)cleanliness);
 
-        if (cleanliness <= 0f)
+
+        if (interest <= 0f)
         {
-            // activate stinky behaviour
+            // activate bored behaviour
         }
     }
 }
