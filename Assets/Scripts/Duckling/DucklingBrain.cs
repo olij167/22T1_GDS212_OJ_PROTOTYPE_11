@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using UnityEditor;
 
 public class DucklingBrain : MonoBehaviour
 {
@@ -11,14 +12,16 @@ public class DucklingBrain : MonoBehaviour
     private AIDestinationSetter destinationSetter;
 
 
-    public Transform ducklingTarget;
+    public Transform ducklingTarget, ducklingHead;
 
     public float stateTimer, maxStateTimer = 90f, minStateTimer = 20f, lowestStat;
     public int pooOddsMaximum;
 
     public string currentState, lowestStatName;
+    public Color stateColour = Color.grey;
 
     public bool hasEaten;
+
 
 
     void Start()
@@ -65,6 +68,7 @@ public class DucklingBrain : MonoBehaviour
         {
             case "affection":
                 {
+                    stateColour = Color.magenta;
                     ResetStateTimer();
                     AttentionSeekingState();
                     break;
@@ -72,6 +76,7 @@ public class DucklingBrain : MonoBehaviour
             
             case "energy":
                 {
+                    stateColour = Color.yellow;
                     ResetStateTimer();
                     TiredState();
                     break;
@@ -79,6 +84,7 @@ public class DucklingBrain : MonoBehaviour
             
             case "hunger":
                 {
+                    stateColour = Color.blue;
                     ResetStateTimer();
                     HungryState();
                     break;
@@ -86,12 +92,14 @@ public class DucklingBrain : MonoBehaviour
             
             case "interest":
                 {
+                    stateColour = Color.cyan;
                     ResetStateTimer();
                     FindActivityState();
                     break;
                 }
             case "N/A":
                 {
+                    stateColour = Color.grey;
                     ResetStateTimer();
                     FindActivityState();
                     break;
@@ -134,6 +142,8 @@ public class DucklingBrain : MonoBehaviour
 
         currentState = "Hungry";
 
+        objectDetection.objectDetectionActivated = true;
+
         for (int i = 0; i < objectDetection.detectedObjects.Count; i++)
         {
             if (!objectDetection.detectedObjects[i].CompareTag("Food"))
@@ -143,7 +153,10 @@ public class DucklingBrain : MonoBehaviour
             else
             {
                 foodFound = true;
+                
                 destinationSetter.target = objectDetection.detectedObjects[i];
+
+                objectDetection.objectDetectionActivated = false;
             }
         }
 
@@ -182,8 +195,10 @@ public class DucklingBrain : MonoBehaviour
 
     public void FindActivityState()
     {
-        currentState = "Wandering Around";
+        currentState = "Find Activity";
         bool activityFound = false;
+
+        objectDetection.objectDetectionActivated = true;
 
         //ducklingStats.energy -= ducklingStats.energyTimerDecrease * Time.deltaTime;
 
@@ -191,20 +206,34 @@ public class DucklingBrain : MonoBehaviour
 
         for (int i = 0; i < objectDetection.detectedObjects.Count; i++)
         {
-            if (!objectDetection.detectedObjects[i].CompareTag("InterestingObject"))
-            {
-                ducklingActions.FindSomething();
-            }
-            else
+            if (objectDetection.detectedObjects[i].CompareTag("InterestingObject") || !objectDetection.detectedObjects[i].CompareTag("Player"))
             {
                 activityFound = true;
                 destinationSetter.target = objectDetection.detectedObjects[i];
+                objectDetection.objectDetectionActivated = false;
+            }
+            else
+            {
+                ducklingActions.FindSomething();
             }
         }
 
         if (activityFound && Vector3.Distance(transform.position, destinationSetter.target.position) <= 1f)
         {
+            currentState = "Play";
+            stateColour = Color.green;
             ducklingActions.PlayWithObject();
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (Application.isPlaying)
+        {
+            Gizmos.color = stateColour;
+            Gizmos.DrawWireSphere(ducklingHead.position, ducklingStats.lookRadius);
+
+            Handles.Label(transform.position, currentState);
         }
     }
 }

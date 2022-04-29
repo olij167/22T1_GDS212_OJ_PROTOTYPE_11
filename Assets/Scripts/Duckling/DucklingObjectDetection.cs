@@ -5,38 +5,77 @@ using UnityEngine;
 
 public class DucklingObjectDetection : MonoBehaviour
 {
+    public Transform eyes;
+
     public string[] interestingObjectTags;
 
     public List<Transform> detectedObjects;
     public Transform interestingObject;
+
+    private DucklingStats ducklingStats;
+
+    public bool objectDetectionActivated;
+
+    public float objectDetectionRefreshTimer;
+    public float refreshTimerReset;
     void Start()
     {
-        
+        ducklingStats = GetComponent<DucklingStats>();
+
+        objectDetectionRefreshTimer = refreshTimerReset;
     }
 
     public void Update()
     {
-        Ray ray = new Ray(transform.position, Vector3.forward);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
+        if (objectDetectionActivated)
         {
-            for (int i = 0; i < interestingObjectTags.Length; i++)
-            {
-                if (hit.transform.CompareTag(interestingObjectTags[i]))
-                {
-                    detectedObjects.Add(hit.transform);
-                }
+            DetectObjects();
 
-                if (Physics.Raycast(ray, out hit))
+            objectDetectionRefreshTimer -= Time.deltaTime;
+
+            if (objectDetectionRefreshTimer <= 0f)
+            {
+                CheckDetectedObjects();
+            }
+        }
+        
+    }
+
+    public void DetectObjects()
+    {
+        RaycastHit[] hits = Physics.SphereCastAll(eyes.position, ducklingStats.lookRadius, transform.forward, 0, 3);
+
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            foreach (string tag in interestingObjectTags)
+            {
+                if (hits[i].transform.CompareTag(tag) && !detectedObjects.Contains(hits[i].transform))
                 {
-                    if (hit.transform != detectedObjects[i])
+                    detectedObjects.Add(hits[i].transform);
+                }
+            }
+        }
+    }
+
+    public void CheckDetectedObjects()
+    {
+        RaycastHit[] hits = Physics.SphereCastAll(eyes.position, ducklingStats.lookRadius, transform.forward, 0, 3);
+
+        if (detectedObjects.Count > hits.Length)
+        {
+            foreach (Transform detectedObject in detectedObjects)
+            {
+                for (int x = 0; x < hits.Length; x++)
+                {
+                    if (detectedObject != hits[x].transform)
                     {
-                        detectedObjects.Remove(detectedObjects[i]);
+                        detectedObjects.Remove(detectedObject);
                     }
                 }
             }
         }
+        else objectDetectionRefreshTimer = refreshTimerReset;
     }
 
 }

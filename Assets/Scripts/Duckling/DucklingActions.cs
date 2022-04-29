@@ -45,13 +45,15 @@ public class DucklingActions : MonoBehaviour
     // Action Methods
     public void FollowPlayer()
     {
-        ducklingStats.energy -= ducklingStats.energyTimerDecrease * Time.deltaTime;
-        ducklingStats.hunger -= ducklingStats.hungerTimerDecrease * Time.deltaTime;
+        ducklingStats.replenishEnergy = false;
+        ducklingStats.replenishHunger = false;
+        ducklingStats.replenishInterest = true;
+        ducklingStats.replenishAffection = true;
 
         destinationSetter.enabled = true;
 
-        followOffset = new Vector3(player.transform.position.x - followDistance, transform.position.y, player.transform.position.x - followDistance);
-        followPosition.position = followOffset;
+        //followOffset = new Vector3(player.transform.position.x - followDistance, transform.position.y, player.transform.position.x - followDistance);
+        //followPosition.position = followOffset;
 
         destinationSetter.target = followPosition;
     }
@@ -64,10 +66,14 @@ public class DucklingActions : MonoBehaviour
 
         actionTarget.transform.localScale = new Vector3(objectScale.x * foodSizeDecrease, objectScale.y * foodSizeDecrease, objectScale.z * foodSizeDecrease) * Time.deltaTime;
 
-        ducklingStats.hunger += ducklingStats.hungerReplenishRate * Time.deltaTime;
+        ducklingStats.replenishHunger = true;
+        ducklingStats.replenishEnergy = false;
+        ducklingStats.replenishInterest = false;
+        ducklingStats.replenishAffection = false;
 
         if (objectScale.x < foodFinishedSize)
         {
+            ducklingStats.hunger += 20f;
             Destroy(actionTarget.gameObject);
         }
     }
@@ -79,16 +85,16 @@ public class DucklingActions : MonoBehaviour
 
     public void BePet()
     {
-        ducklingStats.affection += ducklingStats.affectionReplenishRate * Time.deltaTime;
+        ducklingStats.replenishAffection = true;
 
     }
 
     public void FindSomething()
     {
-        ducklingStats.energy -= ducklingStats.energyTimerDecrease * Time.deltaTime;
-        ducklingStats.hunger -= ducklingStats.hungerTimerDecrease * Time.deltaTime;
-        ducklingStats.interest -= ducklingStats.interestTimerDecrease * Time.deltaTime;
-        ducklingStats.affection -= ducklingStats.affectionTimerDecrease * Time.deltaTime;
+        ducklingStats.replenishEnergy = false;
+        ducklingStats.replenishHunger = false;
+        ducklingStats.replenishInterest = false;
+        ducklingStats.replenishAffection = false;
 
 
 
@@ -111,10 +117,10 @@ public class DucklingActions : MonoBehaviour
         actionTarget = destinationSetter.target;
         destinationSetter.enabled = false;
 
-        ducklingStats.energy -= ducklingStats.energyTimerDecrease * Time.deltaTime;
-        ducklingStats.hunger -= ducklingStats.hungerTimerDecrease * Time.deltaTime;
-        ducklingStats.interest += ducklingStats.interestReplenishRate * Time.deltaTime;
-        ducklingStats.affection += ducklingStats.affectionReplenishRate * Time.deltaTime;
+        ducklingStats.replenishEnergy = false;
+        ducklingStats.replenishHunger = false;
+        ducklingStats.replenishInterest = true;
+        ducklingStats.replenishAffection = true;
 
 
 
@@ -124,6 +130,9 @@ public class DucklingActions : MonoBehaviour
     {
         destinationSetter.enabled = false;
 
-        ducklingStats.energy += ducklingStats.energyReplenishRate * Time.deltaTime;
+        ducklingStats.replenishEnergy = true;
+        ducklingStats.replenishHunger = false;
+        ducklingStats.replenishInterest = false;
+        ducklingStats.replenishAffection = false;
     }
 }

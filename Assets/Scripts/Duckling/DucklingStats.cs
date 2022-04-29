@@ -7,6 +7,8 @@ public class DucklingStats : MonoBehaviour
 {
     //public BehaviorTree behaviorTree;
 
+    public float lookRadius;
+
     public float affection = 100f, affectionTimerDecrease, affectionReplenishRate;
 
     public float energy = 100f, energyTimerDecrease, energyReplenishRate;
@@ -14,6 +16,8 @@ public class DucklingStats : MonoBehaviour
     public float hunger = 100f, hungerTimerDecrease, hungerReplenishRate;
 
     public float interest = 0f, interestTimerDecrease, interestReplenishRate;
+
+    public bool replenishAffection, replenishEnergy, replenishHunger, replenishInterest;
 
     //public float energyTimerReset, hungerTimerReset, cleanlinessTimerReset, affectionTimerReset;
 
@@ -24,13 +28,19 @@ public class DucklingStats : MonoBehaviour
 
     void Update()
     {
+        
         AffectionTimer();
+        affection = Mathf.Clamp(affection, 0f, 100f);
 
         EnergyTimer();
+        energy = Mathf.Clamp(energy, 0f, 100f);
 
         HungerTimer();
+        hunger = Mathf.Clamp(hunger, 0f, 100f);
 
-        CleanlinessTimer();
+        InterestTimer();
+        interest = Mathf.Clamp(interest, 0f, 100f);
+
     }
 
     //public string GetLowestStat(string lowestStatName)
@@ -62,48 +72,42 @@ public class DucklingStats : MonoBehaviour
 
     void AffectionTimer()
     {
-        affection -= Time.deltaTime * affectionTimerDecrease;
-        //behaviorTree.SetVariable("affection", (SharedFloat)affection);
-
-        if (affection <= 0f)
+        if (!replenishAffection)
         {
-            //activate neglected behaviour
+            affection -= Time.deltaTime * affectionTimerDecrease;
         }
+        else affection += Time.deltaTime * affectionReplenishRate;
+
+
     }
 
     void EnergyTimer()
     {
-        energy -= Time.deltaTime * energyTimerDecrease;
-        //behaviorTree.SetVariable("energy", (SharedFloat)energy);
-
-
-        if (energy <= 0f)
+        if (!replenishEnergy)
         {
-            //activate sleep behaviour
+            energy -= Time.deltaTime * energyTimerDecrease;
         }
+        else energy += Time.deltaTime * energyReplenishRate;
+
     }
 
     void HungerTimer()
     {
-        hunger -= Time.deltaTime * hungerTimerDecrease;
-        //behaviorTree.SetVariable("hunger", (SharedFloat)hunger);
-
-
-        if (hunger <= 0f)
+        if (!replenishHunger)
         {
-            // activate hungry behaviour
+            hunger -= Time.deltaTime * hungerTimerDecrease;
         }
+        else hunger += Time.deltaTime * hungerReplenishRate;
+
     }
 
-    void CleanlinessTimer()
+    void InterestTimer()
     {
-        interest += Time.deltaTime * interestTimerDecrease;
-        //behaviorTree.SetVariable("cleanliness", (SharedFloat)cleanliness);
-
-
-        if (interest <= 0f)
+        if (!replenishInterest)
         {
-            // activate bored behaviour
+            interest -= Time.deltaTime * interestTimerDecrease;
         }
+        else interest += Time.deltaTime * interestReplenishRate;
+
     }
 }
