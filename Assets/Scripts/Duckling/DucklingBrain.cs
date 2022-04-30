@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Pathfinding;
 using UnityEditor;
+using Pathfinding;
 
 public class DucklingBrain : MonoBehaviour
 {
@@ -12,9 +12,9 @@ public class DucklingBrain : MonoBehaviour
     private AIDestinationSetter destinationSetter;
 
 
-    public Transform ducklingTarget, ducklingHead;
+    public Transform ducklingHead;
 
-    public float stateTimer, maxStateTimer = 90f, minStateTimer = 20f, lowestStat;
+    public float stateTimer, lowestStat, stateTimerReset; //maxStateTimer = 90f, minStateTimer = 20f;
     public int pooOddsMaximum;
 
     public string currentState, lowestStatName;
@@ -109,7 +109,8 @@ public class DucklingBrain : MonoBehaviour
 
     public void ResetStateTimer()
     {
-        stateTimer = Random.Range(minStateTimer, maxStateTimer);
+        //stateTimer = Random.Range(minStateTimer, maxStateTimer);
+        stateTimer = stateTimerReset;
 
     }
 
@@ -144,16 +145,17 @@ public class DucklingBrain : MonoBehaviour
 
         objectDetection.objectDetectionActivated = true;
 
+        if (!foodFound)
+        {
+            ducklingActions.FindSomething();
+        }
+
         for (int i = 0; i < objectDetection.detectedObjects.Count; i++)
         {
-            if (!objectDetection.detectedObjects[i].CompareTag("Food"))
-            {
-                ducklingActions.FindSomething();
-            }
-            else
+            if (objectDetection.detectedObjects[i].CompareTag("Food"))
             {
                 foodFound = true;
-                
+
                 destinationSetter.target = objectDetection.detectedObjects[i];
 
                 objectDetection.objectDetectionActivated = false;
@@ -162,6 +164,10 @@ public class DucklingBrain : MonoBehaviour
 
         if (foodFound && Vector3.Distance(transform.position, destinationSetter.target.position) <= 1f)
         {
+            currentState = "Eating";
+
+            stateColour = Color.red;
+            
             ducklingActions.Eat();
             hasEaten = true;
         }
@@ -174,7 +180,7 @@ public class DucklingBrain : MonoBehaviour
 
     public void TiredState()
     {
-        currentState = "Tired";
+        currentState = "Sleep";
 
 
         ducklingActions.Sleep();
@@ -206,23 +212,30 @@ public class DucklingBrain : MonoBehaviour
 
         for (int i = 0; i < objectDetection.detectedObjects.Count; i++)
         {
-            if (objectDetection.detectedObjects[i].CompareTag("InterestingObject") || !objectDetection.detectedObjects[i].CompareTag("Player"))
+            if (objectDetection.detectedObjects[i].CompareTag("InterestingObject") || objectDetection.detectedObjects[i].CompareTag("Player"))
             {
                 activityFound = true;
                 destinationSetter.target = objectDetection.detectedObjects[i];
                 objectDetection.objectDetectionActivated = false;
             }
-            else
-            {
-                ducklingActions.FindSomething();
-            }
+            //else
+            //{
+            //    ducklingActions.FindSomething();
+            //}
         }
 
-        if (activityFound && Vector3.Distance(transform.position, destinationSetter.target.position) <= 1f)
+        if (activityFound && destinationSetter.target.CompareTag("InterestingObject") && Vector3.Distance(transform.position, destinationSetter.target.position) <= .5f)
         {
-            currentState = "Play";
+            currentState = "Play with Toy";
             stateColour = Color.green;
             ducklingActions.PlayWithObject();
+        }
+
+        if (activityFound && destinationSetter.target.CompareTag("Player") && Vector3.Distance(transform.position, destinationSetter.target.position) <= .5f)
+        {
+            currentState = "Play with Player";
+            stateColour = Color.green;
+            ducklingActions.PlayWithPlayer();
         }
     }
 

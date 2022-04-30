@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BehaviorDesigner.Runtime;
+using UnityEngine.UI;
 
 public class DucklingStats : MonoBehaviour
 {
     //public BehaviorTree behaviorTree;
+
+    public Slider affectionBar, energyBar, hungerBar, interestBar;
 
     public float lookRadius;
 
@@ -78,7 +80,7 @@ public class DucklingStats : MonoBehaviour
         }
         else affection += Time.deltaTime * affectionReplenishRate;
 
-
+        affectionBar.value = affection;
     }
 
     void EnergyTimer()
@@ -89,6 +91,7 @@ public class DucklingStats : MonoBehaviour
         }
         else energy += Time.deltaTime * energyReplenishRate;
 
+        energyBar.value = energy;
     }
 
     void HungerTimer()
@@ -99,6 +102,7 @@ public class DucklingStats : MonoBehaviour
         }
         else hunger += Time.deltaTime * hungerReplenishRate;
 
+        hungerBar.value = hunger; ;
     }
 
     void InterestTimer()
@@ -109,5 +113,6 @@ public class DucklingStats : MonoBehaviour
         }
         else interest += Time.deltaTime * interestReplenishRate;
 
+        interestBar.value = interest;
     }
 }

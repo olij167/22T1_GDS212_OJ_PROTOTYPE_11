@@ -13,7 +13,7 @@ public class DucklingActions : MonoBehaviour
 
     public Transform player, followPosition, actionTarget;
 
-    private Vector3 followOffset;
+    //private Vector3 followOffset;
     public float followDistance, foodSizeDecrease, foodFinishedSize;
 
     public List<Transform> wanderWaypoints;
@@ -54,8 +54,9 @@ public class DucklingActions : MonoBehaviour
 
         //followOffset = new Vector3(player.transform.position.x - followDistance, transform.position.y, player.transform.position.x - followDistance);
         //followPosition.position = followOffset;
-
         destinationSetter.target = followPosition;
+        transform.LookAt(player);
+
     }
     public void Eat()
     {
@@ -64,14 +65,14 @@ public class DucklingActions : MonoBehaviour
 
         Vector3 objectScale = actionTarget.localScale;
 
-        actionTarget.transform.localScale = new Vector3(objectScale.x * foodSizeDecrease, objectScale.y * foodSizeDecrease, objectScale.z * foodSizeDecrease) * Time.deltaTime;
+        actionTarget.transform.localScale -= new Vector3(objectScale.x * foodSizeDecrease, objectScale.y * foodSizeDecrease, objectScale.z * foodSizeDecrease) * Time.deltaTime;
 
         ducklingStats.replenishHunger = true;
         ducklingStats.replenishEnergy = false;
         ducklingStats.replenishInterest = false;
         ducklingStats.replenishAffection = false;
 
-        if (objectScale.x < foodFinishedSize)
+        if (objectScale.y < foodFinishedSize)
         {
             ducklingStats.hunger += 20f;
             Destroy(actionTarget.gameObject);
@@ -96,9 +97,11 @@ public class DucklingActions : MonoBehaviour
         ducklingStats.replenishInterest = false;
         ducklingStats.replenishAffection = false;
 
-
-
-        destinationSetter.enabled = true;
+        if (!destinationSetter.enabled)
+        {
+            waypointSet = false;
+            destinationSetter.enabled = true;
+        }
 
         if (!waypointSet)
         {
@@ -120,10 +123,18 @@ public class DucklingActions : MonoBehaviour
         ducklingStats.replenishEnergy = false;
         ducklingStats.replenishHunger = false;
         ducklingStats.replenishInterest = true;
+        ducklingStats.replenishAffection = false;
+    }
+    
+    public void PlayWithPlayer()
+    {
+        actionTarget = destinationSetter.target;
+        destinationSetter.enabled = true;
+
+        ducklingStats.replenishEnergy = false;
+        ducklingStats.replenishHunger = false;
+        ducklingStats.replenishInterest = true;
         ducklingStats.replenishAffection = true;
-
-
-
     }
 
     public void Sleep()

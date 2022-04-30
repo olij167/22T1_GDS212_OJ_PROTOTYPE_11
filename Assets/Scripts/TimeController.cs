@@ -5,6 +5,10 @@ using TMPro;
 
 public class TimeController : MonoBehaviour
 {
+
+    public string startDay;
+    [HideInInspector] public string currentDay;
+
     public float turnOver = 59.7f, timeSpeed = 1f;
 
     public int startTimeHours;
@@ -15,13 +19,17 @@ public class TimeController : MonoBehaviour
     [HideInInspector] public float timeMinutes, timeSeconds;
     public bool isPM;
 
-    public TextMeshProUGUI timeText;
+    public TextMeshProUGUI timeText, dayText;
 
     void Start()
     {
         timeHours = startTimeHours;
         timeMinutes = startTimeMinutes;
         timeSeconds = startTimeSeconds;
+
+        currentDay = startDay;
+
+        dayText.text = currentDay;
 
     }
 
@@ -47,6 +55,8 @@ public class TimeController : MonoBehaviour
 
             if (isPM)
             {
+                ProgressDays();
+                dayText.text = currentDay;
                 isPM = false;
             }
             else
@@ -62,6 +72,56 @@ public class TimeController : MonoBehaviour
         else
         {
             timeText.text = timeHours.ToString("00") + ":" + timeMinutes.ToString("00") + ":" + timeSeconds.ToString("00") + " am";
+        }
+
+        
+    }
+
+    void ProgressDays()
+    {
+        switch (currentDay)
+        {
+            case "Sunday":
+                {
+                    currentDay = "Monday";
+                    break;
+                }
+
+            case "Monday":
+                {
+                    currentDay = "Tuesday";
+                    break;
+                }
+
+            case "Tuesday":
+                {
+                    currentDay = "Wednesday";
+                    break;
+                }
+
+            case "Wednesday":
+                {
+                    currentDay = "Thursday";
+                    break;
+                }
+
+            case "Thursday":
+                {
+                    currentDay = "Friday";
+                    break;
+                }
+
+            case "Friday":
+                {
+                    currentDay = "Saturday";
+                    break;
+                }
+            
+            case "Saturday":
+                {
+                    currentDay = "Sunday";
+                    break;
+                }
         }
     }
 }
