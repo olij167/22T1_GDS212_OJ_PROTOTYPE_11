@@ -6,10 +6,10 @@ using Pathfinding;
 
 public class DucklingBrain : MonoBehaviour
 {
-    private DucklingStats ducklingStats;
-    private DucklingActions ducklingActions;
-    private DucklingObjectDetection objectDetection;
-    private AIDestinationSetter destinationSetter;
+    [HideInInspector] public DucklingStats ducklingStats;
+    [HideInInspector] public DucklingActions ducklingActions;
+    [HideInInspector] public DucklingObjectDetection objectDetection;
+    [HideInInspector] public AIDestinationSetter destinationSetter;
 
 
     public Transform ducklingHead;
@@ -197,6 +197,13 @@ public class DucklingBrain : MonoBehaviour
         currentState = "Attention Seeking";
 
         ducklingActions.FollowPlayer();
+
+        if (Vector3.Distance(transform.position, ducklingActions.player.position) < ducklingStats.lookRadius)
+        {
+            currentState = "Playing With You";
+            stateColour = Color.green;
+            ducklingActions.PlayWithPlayer();
+        }
     }
 
     public void FindActivityState()
@@ -233,10 +240,17 @@ public class DucklingBrain : MonoBehaviour
 
         if (activityFound && destinationSetter.target.CompareTag("Player") && Vector3.Distance(transform.position, destinationSetter.target.position) <= .5f)
         {
-            currentState = "Play with Player";
+            currentState = "Play with You";
             stateColour = Color.green;
             ducklingActions.PlayWithPlayer();
         }
+    }
+
+    public void PlayState()
+    {
+        currentState = "Play with Toy From You";
+        stateColour = Color.green;
+        ducklingActions.PlayWithObject();
     }
 
     private void OnDrawGizmos()

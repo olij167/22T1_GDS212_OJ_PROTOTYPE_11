@@ -20,6 +20,13 @@ public class DucklingActions : MonoBehaviour
 
     bool waypointSet = false;
 
+    public new ParticleSystem particleSystem;
+
+    public Sprite affectionSprite, energySprite;
+    public Gradient affectionParticleColour, energyParticleColour;
+   
+
+
 
 
     void Start()
@@ -45,10 +52,15 @@ public class DucklingActions : MonoBehaviour
     // Action Methods
     public void FollowPlayer()
     {
+        if (particleSystem.isPlaying)
+        {
+            particleSystem.Stop();
+        }
+
         ducklingStats.replenishEnergy = false;
         ducklingStats.replenishHunger = false;
         ducklingStats.replenishInterest = true;
-        ducklingStats.replenishAffection = true;
+        ducklingStats.replenishAffection = false;
 
         destinationSetter.enabled = true;
 
@@ -60,6 +72,11 @@ public class DucklingActions : MonoBehaviour
     }
     public void Eat()
     {
+        if (particleSystem.isPlaying)
+        {
+            particleSystem.Stop();
+        }
+
         actionTarget = destinationSetter.target;
         destinationSetter.enabled = false;
 
@@ -75,6 +92,7 @@ public class DucklingActions : MonoBehaviour
         if (objectScale.y < foodFinishedSize)
         {
             ducklingStats.hunger += 20f;
+            ducklingStats.gameObject.GetComponent<DucklingObjectDetection>().detectedObjects.Remove(actionTarget);
             Destroy(actionTarget.gameObject);
         }
     }
@@ -84,14 +102,13 @@ public class DucklingActions : MonoBehaviour
 
     }
 
-    public void BePet()
-    {
-        ducklingStats.replenishAffection = true;
-
-    }
-
     public void FindSomething()
     {
+        if (particleSystem.isPlaying)
+        {
+            particleSystem.Stop();
+        }
+
         ducklingStats.replenishEnergy = false;
         ducklingStats.replenishHunger = false;
         ducklingStats.replenishInterest = false;
@@ -117,6 +134,11 @@ public class DucklingActions : MonoBehaviour
 
     public void PlayWithObject()
     {
+        if (particleSystem.isPlaying)
+        {
+            particleSystem.Stop();
+        }
+
         actionTarget = destinationSetter.target;
         destinationSetter.enabled = false;
 
@@ -135,6 +157,15 @@ public class DucklingActions : MonoBehaviour
         ducklingStats.replenishHunger = false;
         ducklingStats.replenishInterest = true;
         ducklingStats.replenishAffection = true;
+
+        particleSystem.textureSheetAnimation.SetSprite(0,affectionSprite);
+        var col = particleSystem.colorOverLifetime;
+        col.color = affectionParticleColour;
+
+        if (!particleSystem.isPlaying)
+        {
+            particleSystem.Play();
+        }
     }
 
     public void Sleep()
@@ -145,5 +176,14 @@ public class DucklingActions : MonoBehaviour
         ducklingStats.replenishHunger = false;
         ducklingStats.replenishInterest = false;
         ducklingStats.replenishAffection = false;
+
+        particleSystem.textureSheetAnimation.SetSprite(0, energySprite);
+        var col = particleSystem.colorOverLifetime;
+        col.color = energyParticleColour;
+
+        if (!particleSystem.isPlaying)
+        {
+            particleSystem.Play();
+        }
     }
 }

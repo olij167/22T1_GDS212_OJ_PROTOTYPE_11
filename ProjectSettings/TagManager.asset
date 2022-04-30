@@ -9,6 +9,7 @@ TagManager:
   - Food
   - InterestingObject
   - WanderWaypoint
+  - Duckling
   layers:
   - Default
   - TransparentFX
