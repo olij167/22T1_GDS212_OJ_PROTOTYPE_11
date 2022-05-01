@@ -25,10 +25,15 @@ public class DucklingBrain : MonoBehaviour
 
     public bool hasEaten;
 
+    public TimeSO time;
+
+    //public ObjectPositions positions;
+
 
 
     void Start()
     {
+        Time.timeScale = 1;
         //ducklingStats = GetComponent<DucklingStats>(); 
         ducklingActions = GetComponent<DucklingActions>();
         objectDetection = GetComponent<DucklingObjectDetection>();
@@ -57,12 +62,6 @@ public class DucklingBrain : MonoBehaviour
         {
             ChooseState();
         }
-
-        if (!ducklingActions.isAsleep)
-        {
-            ducklingActions.SetEyesStatus();
-        }
-
         // Update Stats
         ducklingStats.AffectionTimer();
         ducklingStats.affection = Mathf.Clamp(ducklingStats.affection, 0f, 100f);
@@ -80,6 +79,13 @@ public class DucklingBrain : MonoBehaviour
     public void ChooseState()
     {
         currentState = "Choosing Next State";
+
+        SaveSystem.SaveData(ducklingStats, time);
+
+        if (!ducklingActions.isAsleep)
+        {
+            ducklingActions.SetEyesStatus();
+        }
 
         if (hasEaten)
         {

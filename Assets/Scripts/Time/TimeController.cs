@@ -21,13 +21,27 @@ public class TimeController : MonoBehaviour
 
     public TextMeshProUGUI timeText, dayText;
 
+    public TimeSO timeSave;
+
     void Start()
     {
-        timeHours = startTimeHours;
-        timeMinutes = startTimeMinutes;
-        timeSeconds = startTimeSeconds;
+        if (timeSave.isLoaded)
+        {
+            timeHours = (int)timeSave.timeHours;
+            timeMinutes = timeSave.timeMinutes;
+            timeSeconds = timeSave.timeSeconds;
 
-        currentDay = startDay;
+            currentDay = timeSave.currentDay;
+
+        }
+        else
+        {
+            timeHours = startTimeHours;
+            timeMinutes = startTimeMinutes;
+            timeSeconds = startTimeSeconds;
+
+            currentDay = startDay;
+        }
 
         dayText.text = currentDay;
 
@@ -74,7 +88,8 @@ public class TimeController : MonoBehaviour
             timeText.text = timeHours.ToString("00") + ":" + timeMinutes.ToString("00") + ":" + timeSeconds.ToString("00") + " am";
         }
 
-        
+        SaveTime();
+
     }
 
     void ProgressDays()
@@ -123,5 +138,14 @@ public class TimeController : MonoBehaviour
                     break;
                 }
         }
+
+    }
+
+    public void SaveTime()
+    {
+        timeSave.timeHours = timeHours;
+        timeSave.timeMinutes = timeMinutes;
+        timeSave.timeSeconds = timeSeconds;
+        timeSave.currentDay = currentDay;
     }
 }

@@ -43,6 +43,7 @@ public class DucklingActions : MonoBehaviour
         {
             wanderWaypoints.Add(wayPoint.transform);
         }
+        SetEyesStatus();
     }
 
     void Update()
