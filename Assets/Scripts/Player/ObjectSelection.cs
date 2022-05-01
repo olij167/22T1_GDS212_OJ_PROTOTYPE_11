@@ -30,7 +30,7 @@ public class ObjectSelection : MonoBehaviour
 
         ducklingActions = duckling.gameObject.GetComponent<DucklingActions>();
         ducklingBrain = duckling.gameObject.GetComponent<DucklingBrain>();
-        ducklingStats = duckling.gameObject.GetComponent<DucklingStats>();
+        ducklingStats = ducklingBrain.ducklingStats;
 
         foodSizeDecrease = ducklingActions.foodSizeDecrease;
         foodFinishedSize = ducklingActions.foodFinishedSize;
@@ -72,7 +72,7 @@ public class ObjectSelection : MonoBehaviour
 
             if (!carryingObject)
             {
-                if (hit.transform.CompareTag("Food") || hit.transform.CompareTag("InterestingObject"))
+                if (hit.transform.CompareTag("Food") || hit.transform.CompareTag("InterestingObject") || hit.transform.CompareTag("Poo"))
                 {
                     inputText.text = "Left Click to Pick Up";
 
@@ -117,17 +117,17 @@ public class ObjectSelection : MonoBehaviour
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        Vector3 objectScale = carriedObject.localScale;
-                        carriedObject.transform.localScale -= new Vector3(objectScale.x * foodSizeDecrease, objectScale.y * foodSizeDecrease, objectScale.z * foodSizeDecrease);
+                        //Vector3 objectScale = carriedObject.localScale;
+                        carriedObject.transform.localScale -= new Vector3(carriedObject.transform.localScale.x * foodSizeDecrease, carriedObject.transform.localScale.y * foodSizeDecrease, carriedObject.transform.localScale.z * foodSizeDecrease);
 
                         ducklingStats.hunger += hungerBoost;
                         ducklingStats.affection += affectionBoost;
 
-                        if (objectScale.y < foodFinishedSize)
+                        if (carriedObject.transform.localScale.y < foodFinishedSize)
                         {
-                            if (ducklingStats.gameObject.GetComponent<DucklingObjectDetection>().detectedObjects.Contains(carriedObject))
+                            if (ducklingBrain.gameObject.GetComponent<DucklingObjectDetection>().detectedObjects.Contains(carriedObject))
                             {
-                                ducklingStats.gameObject.GetComponent<DucklingObjectDetection>().detectedObjects.Remove(carriedObject);
+                                ducklingBrain.gameObject.GetComponent<DucklingObjectDetection>().detectedObjects.Remove(carriedObject);
                             }
                             Destroy(carriedObject.gameObject);
 
@@ -180,6 +180,24 @@ public class ObjectSelection : MonoBehaviour
                     }
                 }
 
+                
+
+            }
+            else if (hit.transform.CompareTag("Bin"))
+            {
+                if (carriedObject.CompareTag("Poo"))
+                {
+                    inputText.text = "Left Click to Dispose";
+
+                    if (Input.GetMouseButton(0))
+                    {
+                        Destroy(carriedObject.gameObject);
+
+                        carryingObject = false;
+                        carriedObject = null;
+                    }
+                }
+                else inputText.text = "Bin";
             }
         }
         else if (!carryingObject)

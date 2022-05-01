@@ -6,15 +6,18 @@ using Pathfinding;
 
 public class DucklingBrain : MonoBehaviour
 {
-    [HideInInspector] public DucklingStats ducklingStats;
+    public DucklingStats ducklingStats;
     [HideInInspector] public DucklingActions ducklingActions;
     [HideInInspector] public DucklingObjectDetection objectDetection;
     [HideInInspector] public AIDestinationSetter destinationSetter;
 
 
     public Transform ducklingHead;
+    public GameObject closedEyes, openEyes;
 
-    public float stateTimer, lowestStat, stateTimerReset; //maxStateTimer = 90f, minStateTimer = 20f;
+
+    public float stateTimerReset; //maxStateTimer = 90f, minStateTimer = 20f;
+    private float lowestStat, stateTimer, stateTimerResetReset;
     public int pooOddsMaximum;
 
     public string currentState, lowestStatName;
@@ -26,10 +29,18 @@ public class DucklingBrain : MonoBehaviour
 
     void Start()
     {
-        ducklingStats = GetComponent<DucklingStats>(); 
+        //ducklingStats = GetComponent<DucklingStats>(); 
         ducklingActions = GetComponent<DucklingActions>();
         objectDetection = GetComponent<DucklingObjectDetection>();
         destinationSetter = GetComponent<AIDestinationSetter>();
+
+        stateTimer = 0f;
+        stateTimerResetReset = stateTimerReset;
+
+        closedEyes.SetActive(false);
+        openEyes.SetActive(true);
+
+
 
         ResetStateTimer();
         ChooseState();
@@ -46,13 +57,29 @@ public class DucklingBrain : MonoBehaviour
         {
             ChooseState();
         }
+
+        if (!ducklingActions.isAsleep)
+        {
+            ducklingActions.SetEyesStatus();
+        }
+
+        // Update Stats
+        ducklingStats.AffectionTimer();
+        ducklingStats.affection = Mathf.Clamp(ducklingStats.affection, 0f, 100f);
+
+        ducklingStats.EnergyTimer();
+        ducklingStats.energy = Mathf.Clamp(ducklingStats.energy, 0f, 100f);
+
+        ducklingStats.HungerTimer();
+        ducklingStats.hunger = Mathf.Clamp(ducklingStats.hunger, 0f, 100f);
+
+        ducklingStats.InterestTimer();
+        ducklingStats.interest = Mathf.Clamp(ducklingStats.interest, 0f, 100f);
     }
 
     public void ChooseState()
     {
         currentState = "Choosing Next State";
-
-        GetLowestStat();
 
         if (hasEaten)
         {
@@ -61,50 +88,67 @@ public class DucklingBrain : MonoBehaviour
             if (pooChance == 0)
             {
                 ducklingActions.Poo();
+                Debug.Log("Just Pooped");
+                hasEaten = false;
             }
         }
-       
-        switch (lowestStatName)
+
+        GetLowestStat();
+
+        if (lowestStat <= 25f)
         {
-            case "affection":
-                {
-                    stateColour = Color.magenta;
-                    ResetStateTimer();
-                    AttentionSeekingState();
-                    break;
-                }
-            
-            case "energy":
-                {
-                    stateColour = Color.yellow;
-                    ResetStateTimer();
-                    TiredState();
-                    break;
-                }
-            
-            case "hunger":
-                {
-                    stateColour = Color.blue;
-                    ResetStateTimer();
-                    HungryState();
-                    break;
-                }
-            
-            case "interest":
-                {
-                    stateColour = Color.cyan;
-                    ResetStateTimer();
-                    FindActivityState();
-                    break;
-                }
-            case "N/A":
-                {
-                    stateColour = Color.grey;
-                    ResetStateTimer();
-                    FindActivityState();
-                    break;
-                }
+            //stateTimerReset /= 2;
+            switch (lowestStatName)
+            {
+                case "Affection":
+                    {
+                        stateColour = Color.magenta;
+                        ResetStateTimer();
+                        AttentionSeekingState();
+                        break;
+                    }
+
+                case "Energy":
+                    {
+                        stateColour = Color.yellow;
+                        ResetStateTimer();
+                        TiredState();
+                        break;
+                    }
+
+                case "Hunger":
+                    {
+                        stateColour = Color.blue;
+                        ResetStateTimer();
+                        HungryState();
+                        break;
+                    }
+
+                case "Interest":
+                    {
+                        stateColour = Color.cyan;
+                        ResetStateTimer();
+                        FindActivityState();
+                        break;
+                    }
+                case "N/A":
+                    {
+                        stateColour = Color.grey;
+                        ResetStateTimer();
+                        FindActivityState();
+                        break;
+                    }
+            }
         }
+        else
+        {
+            //if (stateTimerReset != stateTimerResetReset)
+            //{
+            //    stateTimerReset = stateTimerResetReset;
+            //}
+            FindActivityState();
+        }
+
     }
 
     public void ResetStateTimer()
@@ -120,19 +164,19 @@ public class DucklingBrain : MonoBehaviour
 
         if (lowestStat == ducklingStats.affection)
         {
-            return lowestStatName = "affection";
+            return lowestStatName = "Affection";
         }
         else if (lowestStat == ducklingStats.energy)
         {
-            return lowestStatName = "energy";
+            return lowestStatName = "Energy";
         }
         else if (lowestStat == ducklingStats.hunger)
         {
-            return lowestStatName = "hunger";
+            return lowestStatName = "Hunger";
         }
         else if (lowestStat == ducklingStats.interest)
         {
-            return lowestStatName = "interest";
+            return lowestStatName = "Interest";
         }
         else return lowestStatName = "N/A";
     }
@@ -144,6 +188,8 @@ public class DucklingBrain : MonoBehaviour
         currentState = "Hungry";
 
         objectDetection.objectDetectionActivated = true;
+
+
 
         if (!foodFound)
         {
@@ -248,6 +294,7 @@ public class DucklingBrain : MonoBehaviour
 
     public void PlayState()
     {
+        ResetStateTimer();
         currentState = "Play with Toy From You";
         stateColour = Color.green;
         ducklingActions.PlayWithObject();

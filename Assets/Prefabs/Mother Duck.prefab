@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5642747681902327}
   - component: {fileID: 3697619547516114792}
-  - component: {fileID: 8045473283985320108}
   m_Layer: 0
   m_Name: Mother Duck
   m_TagString: MotherDuck
@@ -52,21 +51,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 10, y: 1, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8045473283985320108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5642747681902322}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1330f7d765550e044a72c06afb9ec184, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  narrator: {fileID: 0}
-  reunitedWithMotherAudio: {fileID: 8300000, guid: 5eb1688a5d205c346a5b02298b52922c, type: 3}
-  motherDuckReached: 0
 --- !u!1 &5642748352773828
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,7 +111,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7d2fe098a01fcfc4a91136893c19ccb1, type: 2}
+  - {fileID: 2100000, guid: 3e1b930c0d5369246a1ea27c570a6e54, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

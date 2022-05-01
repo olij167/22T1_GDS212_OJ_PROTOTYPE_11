@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class DucklingStats : MonoBehaviour
+[CreateAssetMenu(menuName = "DucklingStats")]
+public class DucklingStats : ScriptableObject
 {
-    //public BehaviorTree behaviorTree;
 
-    public Slider affectionBar, energyBar, hungerBar, interestBar;
+    public string ducklingName;
 
     public float lookRadius;
 
@@ -21,58 +20,7 @@ public class DucklingStats : MonoBehaviour
 
     public bool replenishAffection, replenishEnergy, replenishHunger, replenishInterest;
 
-    //public float energyTimerReset, hungerTimerReset, cleanlinessTimerReset, affectionTimerReset;
-
-    private void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-        AffectionTimer();
-        affection = Mathf.Clamp(affection, 0f, 100f);
-
-        EnergyTimer();
-        energy = Mathf.Clamp(energy, 0f, 100f);
-
-        HungerTimer();
-        hunger = Mathf.Clamp(hunger, 0f, 100f);
-
-        InterestTimer();
-        interest = Mathf.Clamp(interest, 0f, 100f);
-
-    }
-
-    //public string GetLowestStat(string lowestStatName)
-    //{
-    //    float lowestStat = Mathf.Min(affection, energy, hunger, interest);
-
-    //    if (lowestStat == affection)
-    //    {
-    //        return lowestStatName = "affection";
-    //    }
-
-    //    if (lowestStat == energy)
-    //    {
-    //        return lowestStatName = "energy";
-    //    }
-
-    //    if (lowestStat == hunger)
-    //    {
-    //        return lowestStatName = "hunger";
-    //    }
-
-    //    if (lowestStat == interest)
-    //    {
-    //        return lowestStatName = "interest";
-    //    }
-
-
-    //}
-
-    void AffectionTimer()
+    public void AffectionTimer()
     {
         if (!replenishAffection)
         {
@@ -80,10 +28,9 @@ public class DucklingStats : MonoBehaviour
         }
         else affection += Time.deltaTime * affectionReplenishRate;
 
-        affectionBar.value = affection;
     }
 
-    void EnergyTimer()
+    public void EnergyTimer()
     {
         if (!replenishEnergy)
         {
@@ -91,10 +38,9 @@ public class DucklingStats : MonoBehaviour
         }
         else energy += Time.deltaTime * energyReplenishRate;
 
-        energyBar.value = energy;
     }
 
-    void HungerTimer()
+    public void HungerTimer()
     {
         if (!replenishHunger)
         {
@@ -102,10 +48,9 @@ public class DucklingStats : MonoBehaviour
         }
         else hunger += Time.deltaTime * hungerReplenishRate;
 
-        hungerBar.value = hunger; ;
     }
 
-    void InterestTimer()
+    public void InterestTimer()
     {
         if (!replenishInterest)
         {
@@ -113,6 +58,5 @@ public class DucklingStats : MonoBehaviour
         }
         else interest += Time.deltaTime * interestReplenishRate;
 
-        interestBar.value = interest;
     }
 }

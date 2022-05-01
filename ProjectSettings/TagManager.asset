@@ -10,6 +10,8 @@ TagManager:
   - InterestingObject
   - WanderWaypoint
   - Duckling
+  - Poo
+  - Bin
   layers:
   - Default
   - TransparentFX

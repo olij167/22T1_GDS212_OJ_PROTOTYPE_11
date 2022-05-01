@@ -6,36 +6,38 @@ using Pathfinding;
 public class DucklingActions : MonoBehaviour
 {
     private DucklingStats ducklingStats;
+    private DucklingBrain ducklingBrain;
 
     private AIDestinationSetter destinationSetter;
 
     //private DucklingObjectDetection objectDetection;
 
-    public Transform player, followPosition, actionTarget;
+    public Transform player, followPosition, actionTarget, pooPrefab;
 
     //private Vector3 followOffset;
     public float followDistance, foodSizeDecrease, foodFinishedSize;
 
+    public int minPoo, maxPoo;
+
     public List<Transform> wanderWaypoints;
 
-    bool waypointSet = false;
+    public bool waypointSet = false, isAsleep;
 
     public new ParticleSystem particleSystem;
 
-    public Sprite affectionSprite, energySprite;
-    public Gradient affectionParticleColour, energyParticleColour;
-   
+    public Sprite affectionSprite, energySprite, interestSprite, excitementSprite;
+    public Gradient affectionParticleColour, energyParticleColour, interestParticleColour, excitementColour;
 
-
-
-
-    void Start()
+    void Awake()
     {
-        ducklingStats = GetComponent<DucklingStats>();
+        ducklingBrain = GetComponent<DucklingBrain>();
+        ducklingStats = ducklingBrain.ducklingStats;
         destinationSetter = GetComponent<AIDestinationSetter>();
         //objectDetection = GetComponent<DucklingObjectDetection>();
 
         wanderWaypoints = new List<Transform>();
+
+        
 
         foreach (GameObject wayPoint in GameObject.FindGameObjectsWithTag("WanderWaypoint"))
         {
@@ -48,13 +50,42 @@ public class DucklingActions : MonoBehaviour
        
     }
 
+    public void SetEyesStatus()
+    {
+        if (isAsleep)
+        {
+            ducklingBrain.openEyes.SetActive(false);
+            ducklingBrain.closedEyes.SetActive(true);
+        }
+        else
+        {
+            ducklingBrain.openEyes.SetActive(true);
+            ducklingBrain.closedEyes.SetActive(false);
+        }
+
+        //if (ducklingBrain.closedEyes.activeSelf)
+        //{
+        //    if (!particleSystem.textureSheetAnimation.GetSprite(0) == energySprite || !particleSystem.isPlaying)
+        //    {
+        //        ducklingBrain.openEyes.SetActive(true);
+        //        ducklingBrain.closedEyes.SetActive(false);
+        //    }
+        //}
+    }
+
     
     // Action Methods
     public void FollowPlayer()
     {
-        if (particleSystem.isPlaying)
+        isAsleep = false;
+
+        particleSystem.textureSheetAnimation.SetSprite(0, interestSprite);
+        var col = particleSystem.colorOverLifetime;
+        col.color = interestParticleColour;
+
+        if (!particleSystem.isPlaying)
         {
-            particleSystem.Stop();
+            particleSystem.Play();
         }
 
         ducklingStats.replenishEnergy = false;
@@ -72,6 +103,9 @@ public class DucklingActions : MonoBehaviour
     }
     public void Eat()
     {
+        isAsleep = false;
+
+
         if (particleSystem.isPlaying)
         {
             particleSystem.Stop();
@@ -92,27 +126,51 @@ public class DucklingActions : MonoBehaviour
         if (objectScale.y < foodFinishedSize)
         {
             ducklingStats.hunger += 20f;
-            ducklingStats.gameObject.GetComponent<DucklingObjectDetection>().detectedObjects.Remove(actionTarget);
+            destinationSetter.gameObject.GetComponent<DucklingObjectDetection>().detectedObjects.Remove(actionTarget);
             Destroy(actionTarget.gameObject);
+
+            actionTarget = null;
+        }
+
+        if (!ducklingBrain.objectDetection.detectedObjects.Contains(actionTarget))
+        {
+            actionTarget = null;
         }
     }
 
     public void Poo()
     {
+        isAsleep = false;
+
+        int pooNum = Random.Range(minPoo, maxPoo);
+        GameObject[] pooArray = new GameObject[pooNum];
+
+        for (int i = 0; i < pooNum; i++)
+        {
+           pooArray[i] = Instantiate(pooPrefab.gameObject, new Vector3(transform.position.x, pooPrefab.lossyScale.y / 2, transform.position.z - (transform.lossyScale.z / 2)), Quaternion.Euler(new Vector3(90, 0, Random.Range(0, 360))));
+
+            
+        }
 
     }
 
     public void FindSomething()
     {
-        if (particleSystem.isPlaying)
-        {
-            particleSystem.Stop();
-        }
+        isAsleep = false;
 
         ducklingStats.replenishEnergy = false;
         ducklingStats.replenishHunger = false;
         ducklingStats.replenishInterest = false;
         ducklingStats.replenishAffection = false;
+
+        particleSystem.textureSheetAnimation.SetSprite(0, interestSprite);
+        var col = particleSystem.colorOverLifetime;
+        col.color = interestParticleColour;
+
+        if (!particleSystem.isPlaying)
+        {
+            particleSystem.Play();
+        } 
 
         if (!destinationSetter.enabled)
         {
@@ -130,13 +188,21 @@ public class DucklingActions : MonoBehaviour
         {
             waypointSet = false;
         }
+
+       
     }
 
     public void PlayWithObject()
     {
-        if (particleSystem.isPlaying)
+        isAsleep = false;
+
+        particleSystem.textureSheetAnimation.SetSprite(0, excitementSprite);
+        var col = particleSystem.colorOverLifetime;
+        col.color = excitementColour;
+
+        if (!particleSystem.isPlaying)
         {
-            particleSystem.Stop();
+            particleSystem.Play();
         }
 
         actionTarget = destinationSetter.target;
@@ -146,10 +212,17 @@ public class DucklingActions : MonoBehaviour
         ducklingStats.replenishHunger = false;
         ducklingStats.replenishInterest = true;
         ducklingStats.replenishAffection = false;
+
+        if (!ducklingBrain.objectDetection.detectedObjects.Contains(actionTarget))
+        {
+            actionTarget = null;
+        }
     }
     
     public void PlayWithPlayer()
     {
+        isAsleep = false;
+
         actionTarget = destinationSetter.target;
         destinationSetter.enabled = true;
 
@@ -166,6 +239,11 @@ public class DucklingActions : MonoBehaviour
         {
             particleSystem.Play();
         }
+
+        if (!ducklingBrain.objectDetection.detectedObjects.Contains(actionTarget))
+        {
+            actionTarget = null;
+        }
     }
 
     public void Sleep()
@@ -180,6 +258,10 @@ public class DucklingActions : MonoBehaviour
         particleSystem.textureSheetAnimation.SetSprite(0, energySprite);
         var col = particleSystem.colorOverLifetime;
         col.color = energyParticleColour;
+        
+        isAsleep = true;
+
+        SetEyesStatus();
 
         if (!particleSystem.isPlaying)
         {

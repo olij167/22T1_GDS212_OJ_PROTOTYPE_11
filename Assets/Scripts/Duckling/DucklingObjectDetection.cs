@@ -13,6 +13,7 @@ public class DucklingObjectDetection : MonoBehaviour
     public Transform interestingObject;
 
     private DucklingStats ducklingStats;
+    private DucklingBrain ducklingBrain;
 
     public bool objectDetectionActivated;
 
@@ -20,7 +21,8 @@ public class DucklingObjectDetection : MonoBehaviour
     public float refreshTimerReset;
     void Start()
     {
-        ducklingStats = GetComponent<DucklingStats>();
+        ducklingBrain = GetComponent<DucklingBrain>();
+        ducklingStats = ducklingBrain.ducklingStats;
 
         objectDetectionRefreshTimer = refreshTimerReset;
     }
