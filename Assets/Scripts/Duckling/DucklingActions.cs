@@ -148,7 +148,7 @@ public class DucklingActions : MonoBehaviour
 
         for (int i = 0; i < pooNum; i++)
         {
-           pooArray[i] = Instantiate(pooPrefab.gameObject, new Vector3(transform.position.x, pooPrefab.lossyScale.y / 2, transform.position.z - (transform.lossyScale.z / 2)), Quaternion.Euler(new Vector3(90, 0, Random.Range(0, 360))));
+           pooArray[i] = Instantiate(pooPrefab.gameObject, new Vector3(transform.position.x, transform.position.y, transform.position.z - (transform.lossyScale.z / 2)), Quaternion.Euler(new Vector3(90, 0, Random.Range(0, 360))));
 
             
         }

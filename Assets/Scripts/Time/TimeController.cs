@@ -81,11 +81,11 @@ public class TimeController : MonoBehaviour
 
         if (isPM)
         {
-            timeText.text = timeHours.ToString("00") + ":" + timeMinutes.ToString("00") + ":" + timeSeconds.ToString("00") + " pm";
+            timeText.text = timeHours.ToString("00") + ":" + timeMinutes.ToString("00") +   " pm"; //":" + timeSeconds.ToString("00") +
         }
         else
         {
-            timeText.text = timeHours.ToString("00") + ":" + timeMinutes.ToString("00") + ":" + timeSeconds.ToString("00") + " am";
+            timeText.text = timeHours.ToString("00") + ":" + timeMinutes.ToString("00")   + " am"; //+ ":" + timeSeconds.ToString("00")
         }
 
         SaveTime();

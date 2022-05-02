@@ -17,7 +17,7 @@ public class DucklingBrain : MonoBehaviour
 
 
     public float stateTimerReset; //maxStateTimer = 90f, minStateTimer = 20f;
-    private float lowestStat, stateTimer, stateTimerResetReset;
+    private float lowestStat, stateTimer;
     public int pooOddsMaximum;
 
     public string currentState, lowestStatName;
@@ -40,7 +40,6 @@ public class DucklingBrain : MonoBehaviour
         destinationSetter = GetComponent<AIDestinationSetter>();
 
         stateTimer = 0f;
-        stateTimerResetReset = stateTimerReset;
 
         closedEyes.SetActive(false);
         openEyes.SetActive(true);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Pathfinding;
+using UnityStandardAssets.Characters.FirstPerson;
+
 
 public class ObjectSelection : MonoBehaviour
 {
@@ -11,8 +13,9 @@ public class ObjectSelection : MonoBehaviour
     public Transform handPos, carriedObject;
     public bool carryingObject;
 
+    private RigidbodyFirstPersonController playerController;
 
-    public GameObject duckling, inputPanel;
+    public GameObject duckling, inputPanel, shopUI;
     public TextMeshProUGUI inputText;
 
     private DucklingBrain ducklingBrain;
@@ -24,6 +27,14 @@ public class ObjectSelection : MonoBehaviour
 
     private float foodSizeDecrease, foodFinishedSize;
 
+    private GoToWork goToWork;
+    private GoToBed goToBed;
+
+    public TimeController timeController;
+
+    public LayerMask layerMask;
+    //int ignoreMask = 1 << 3 | 1 << 0;
+
     void Start()
     {
         inputPanel.SetActive(false);
@@ -34,18 +45,24 @@ public class ObjectSelection : MonoBehaviour
 
         foodSizeDecrease = ducklingActions.foodSizeDecrease;
         foodFinishedSize = ducklingActions.foodFinishedSize;
+
+        goToWork = GetComponent<GoToWork>();
+        goToBed = GetComponent<GoToBed>();
+        playerController = goToWork.playerController;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
+        
         if (carryingObject)
         {
             inputPanel.SetActive(true);
             inputText.text = "Right Click to Drop";
 
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetButtonDown("Fire2"))
             {
                 carriedObject.GetComponent<Rigidbody>().useGravity = true;
                 carriedObject.GetComponent<Rigidbody>().isKinematic = false;
@@ -62,12 +79,45 @@ public class ObjectSelection : MonoBehaviour
         RaycastHit hit;
         //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+        layerMask = 1 << 3 | 1 << 8;
 
-        if (Physics.Raycast(ray, out hit, reachDistance, 3))
+        if (Physics.Raycast(ray, out hit, reachDistance, ~layerMask))
         {
             if (!inputPanel.activeSelf)
             {
                 inputPanel.SetActive(true);
+            }
+
+            if (hit.transform.CompareTag("Computer"))
+            {
+                inputText.text = "Left Click to Shop Online";
+
+                if (Input.GetButtonDown("Fire1"))
+                {
+                    Cursor.lockState = CursorLockMode.Confined;
+                    playerController.enabled = false;
+                    shopUI.SetActive(true);
+                }
+            }
+
+            if (hit.transform.CompareTag("Bed") && timeController.isPM)
+            {
+                inputText.text = "Left Click to Sleep";
+
+                if (Input.GetButtonDown("Fire1"))
+                {
+                    goToBed.GoToSleep();
+                }
+            }
+            
+            if (hit.transform.CompareTag("FrontDoor") && !timeController.isPM)
+            {
+                inputText.text = "Left Click to Go to Work";
+
+                if (Input.GetButtonDown("Fire1"))
+                {
+                    goToWork.AtWork();
+                }
             }
 
             if (!carryingObject)
@@ -76,7 +126,7 @@ public class ObjectSelection : MonoBehaviour
                 {
                     inputText.text = "Left Click to Pick Up";
 
-                    if (Input.GetMouseButtonDown(0))
+                    if (Input.GetButtonDown("Fire1"))
                     {
                         carriedObject = hit.transform;
                         carriedObject.GetComponent<Rigidbody>().useGravity = false;
@@ -93,7 +143,7 @@ public class ObjectSelection : MonoBehaviour
                 {
                     inputText.text = "Left Click to Pat";
 
-                    if (Input.GetMouseButtonDown(0))
+                    if (Input.GetButtonDown("Fire1"))
                     {
                         Debug.Log("You pet the duck");
                         ducklingStats.affection += affectionBoost;
@@ -115,13 +165,15 @@ public class ObjectSelection : MonoBehaviour
                 {
                     inputText.text = "Left Click to Feed";
 
-                    if (Input.GetMouseButtonDown(0))
+                    if (Input.GetButtonDown("Fire1"))
                     {
+                        ducklingBrain.hasEaten = true;
                         //Vector3 objectScale = carriedObject.localScale;
                         carriedObject.transform.localScale -= new Vector3(carriedObject.transform.localScale.x * foodSizeDecrease, carriedObject.transform.localScale.y * foodSizeDecrease, carriedObject.transform.localScale.z * foodSizeDecrease);
 
                         ducklingStats.hunger += hungerBoost;
                         ducklingStats.affection += affectionBoost;
+                        
 
                         if (carriedObject.transform.localScale.y < foodFinishedSize)
                         {
@@ -131,6 +183,7 @@ public class ObjectSelection : MonoBehaviour
                             }
                             Destroy(carriedObject.gameObject);
 
+                            
                             carriedObject = null;
                             carryingObject = false;
                         }
@@ -149,7 +202,7 @@ public class ObjectSelection : MonoBehaviour
                 {
                     inputText.text = "Left Click to Give Toy";
 
-                    if (Input.GetMouseButtonDown(0))
+                    if (Input.GetButtonDown("Fire1"))
                     {
                         ducklingBrain.destinationSetter.target = carriedObject.transform;
                         ducklingBrain.PlayState();
@@ -189,7 +242,7 @@ public class ObjectSelection : MonoBehaviour
                 {
                     inputText.text = "Left Click to Dispose";
 
-                    if (Input.GetMouseButton(0))
+                    if (Input.GetButtonDown("Fire1"))
                     {
                         Destroy(carriedObject.gameObject);
 
@@ -202,6 +255,7 @@ public class ObjectSelection : MonoBehaviour
         }
         else if (!carryingObject)
         {
+            inputText.text = null;
             inputPanel.SetActive(false);
         }
 

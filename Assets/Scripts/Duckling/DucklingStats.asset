@@ -14,19 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ducklingName: Henry
   lookRadius: 2
-  affection: 68.178825
+  affection: 88.24924
   affectionTimerDecrease: 0.3
   affectionReplenishRate: 1
-  energy: 19.069307
+  energy: 34.004494
   energyTimerDecrease: 0.25
-  energyReplenishRate: 1.5
-  hunger: 91.94273
+  energyReplenishRate: 3
+  hunger: 79.05375
   hungerTimerDecrease: 0.25
   hungerReplenishRate: 1
-  interest: 94.914635
+  interest: 87.01032
   interestTimerDecrease: 0.4
   interestReplenishRate: 1.5
   replenishAffection: 0
-  replenishEnergy: 1
+  replenishEnergy: 0
   replenishHunger: 0
   replenishInterest: 0
+  playerMoney: 907175

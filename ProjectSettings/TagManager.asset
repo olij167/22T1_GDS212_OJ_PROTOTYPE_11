@@ -12,6 +12,9 @@ TagManager:
   - Duckling
   - Poo
   - Bin
+  - Computer
+  - FrontDoor
+  - Bed
   layers:
   - Default
   - TransparentFX
@@ -21,8 +24,8 @@ TagManager:
   - UI
   - Food
   - InterestingObject
-  - 
-  - 
+  - Furniture
+  - Post Processing
   - 
   - 
   - 

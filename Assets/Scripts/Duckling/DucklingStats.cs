@@ -20,6 +20,8 @@ public class DucklingStats : ScriptableObject
 
     public bool replenishAffection, replenishEnergy, replenishHunger, replenishInterest;
 
+    public float playerMoney;
+
     public void AffectionTimer()
     {
         if (!replenishAffection)
