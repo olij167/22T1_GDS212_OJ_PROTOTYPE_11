@@ -25,8 +25,8 @@ public class DucklingActions : MonoBehaviour
 
     public new ParticleSystem particleSystem;
 
-    public Sprite affectionSprite, energySprite, interestSprite, excitementSprite;
-    public Gradient affectionParticleColour, energyParticleColour, interestParticleColour, excitementColour;
+    public Sprite affectionSprite, energySprite, interestSprite, excitementSprite, hungerSprite;
+    public Gradient affectionParticleColour, energyParticleColour, interestParticleColour, excitementColour, hungerColour;
 
     void Awake()
     {
@@ -107,9 +107,13 @@ public class DucklingActions : MonoBehaviour
         isAsleep = false;
 
 
-        if (particleSystem.isPlaying)
+        particleSystem.textureSheetAnimation.SetSprite(0, hungerSprite);
+        var col = particleSystem.colorOverLifetime;
+        col.color = hungerColour;
+
+        if (!particleSystem.isPlaying)
         {
-            particleSystem.Stop();
+            particleSystem.Play();
         }
 
         actionTarget = destinationSetter.target;

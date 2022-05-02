@@ -48,6 +48,29 @@ public class MainMenuNavigation : MonoBehaviour
 
         time.isLoaded = true;
 
+        //List<Vector3> toyPositionList = new List<Vector3>();
+        //List<Vector3> foodPositionList = new List<Vector3>();
+
+        //foreach (float[] foodPosition in data.foodPositionList)
+        //{
+        //    Vector3 position;
+        //    position.x = foodPosition[0];
+        //    position.y = foodPosition[1];
+        //    position.z = foodPosition[2];
+        //    objectPositions.foodPositions.Add(position);
+        //}
+        
+        //foreach (float[] toyPosition in data.toyPositionList)
+        //{
+        //    Vector3 position;
+        //    position.x = toyPosition[0];
+        //    position.y = toyPosition[1];
+        //    position.z = toyPosition[2];
+        //    objectPositions.toyPositions.Add(position);
+        //}
+
+        //objectPositions.isLoaded = true;
+
         SceneManager.LoadScene(gameScene);
 
     }
@@ -70,8 +93,10 @@ public class MainMenuNavigation : MonoBehaviour
         ducklingStats.energy = 50f;
         ducklingStats.hunger = 50f;
         ducklingStats.interest = 50f;
+        ducklingStats.playerMoney = 8f;
 
         time.isLoaded = false;
+        //objectPositions.isLoaded = false;
 
         SceneManager.LoadScene(gameScene);
 

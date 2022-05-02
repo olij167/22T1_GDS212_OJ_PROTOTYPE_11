@@ -13,7 +13,7 @@ public class ObjectSelection : MonoBehaviour
     public Transform handPos, carriedObject;
     public bool carryingObject;
 
-    private RigidbodyFirstPersonController playerController;
+    private FirstPersonController playerController;
 
     public GameObject duckling, inputPanel, shopUI;
     public TextMeshProUGUI inputText;

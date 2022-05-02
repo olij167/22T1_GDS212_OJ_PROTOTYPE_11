@@ -13,7 +13,8 @@ public class GameNavigation : MonoBehaviour
     public TimeSO time;
     public DucklingStats ducklingStats;
     public GameObject pauseUI;
-    public RigidbodyFirstPersonController playerController;
+    public FirstPersonController playerController;
+    public ObjectPositions objectPositions;
 
     //public Button saveButton, menuButton, quitButton;
 
@@ -66,12 +67,14 @@ public class GameNavigation : MonoBehaviour
 
     public void SaveGame()
     {
+
         SaveSystem.SaveData(ducklingStats, time);
     }
 
     public void EnablePause()
     {
         playerController.enabled = false;
+        playerController.gameObject.GetComponent<ObjectSelection>().enabled = false;
 
         Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.Confined;
@@ -82,6 +85,7 @@ public class GameNavigation : MonoBehaviour
     public void DisablePause()
     {
         playerController.enabled = true;
+        playerController.gameObject.GetComponent<ObjectSelection>().enabled = true;
 
         Time.timeScale = 1;
         Cursor.lockState = CursorLockMode.Locked;

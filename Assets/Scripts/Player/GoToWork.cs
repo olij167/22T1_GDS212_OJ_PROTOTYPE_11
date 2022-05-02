@@ -18,10 +18,10 @@ public class GoToWork : MonoBehaviour
 
     float timeSpeed;
     public float atWorkTimeIncrease;
-    bool atWork, beenToWork;
+    public bool atWork, beenToWork;
     string currentDay;
 
-    public RigidbodyFirstPersonController playerController;
+    public FirstPersonController playerController;
     public Transform atWorkTransform, frontDoorTransform;
     private ObjectSelection objectSelection;
 
@@ -30,6 +30,10 @@ public class GoToWork : MonoBehaviour
     public bool wasEarly, wasLate;
 
     public DucklingStats stats;
+
+    public Canvas canvas;
+
+    public EndGame endGame;
 
 
     void Start()
@@ -66,6 +70,8 @@ public class GoToWork : MonoBehaviour
     {
         if (!atWork)
         {
+            
+
             // Early For Work Bonus
             if ((!timeController.isPM && timeController.timeHours < 6) || (timeController.timeHours == 6 && timeController.timeMinutes < 30f))
             {
@@ -87,8 +93,11 @@ public class GoToWork : MonoBehaviour
             objectSelection.enabled = false;
             mainCam.enabled = false;
             duckCamControls.enabled = true;
+            canvas.worldCamera = duckCam;
 
             playerController.enabled = false;
+            playerController.gameObject.GetComponent<ObjectSelection>().enabled = false;
+
             playerController.gameObject.transform.position = atWorkTransform.position;
             timeController.timeSpeed *= atWorkTimeIncrease;
 
@@ -111,7 +120,9 @@ public class GoToWork : MonoBehaviour
             objectSelection.enabled = true;
             timeController.timeSpeed = timeSpeed;
 
-            stats.playerMoney += incomeForDay;
+            canvas.worldCamera = mainCam;
+
+
             getHomePanel.SetActive(true);
             incomeText.text = "You earned $" + incomeForDay.ToString();
 
@@ -151,6 +162,8 @@ public class GoToWork : MonoBehaviour
                 playerController.enabled = true;
                 beenToWork = true;
                 currentDay = timeController.currentDay;
+                stats.playerMoney += incomeForDay;
+                playerController.gameObject.GetComponent<ObjectSelection>().enabled = true;
                 atWork = false;
             }
         }

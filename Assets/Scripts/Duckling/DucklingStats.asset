@@ -12,22 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec65abe42e309642bd57e5221896baa, type: 3}
   m_Name: DucklingStats
   m_EditorClassIdentifier: 
-  ducklingName: Henry
+  ducklingName: bronson
   lookRadius: 2
-  affection: 88.24924
+  affection: 58.487534
   affectionTimerDecrease: 0.3
   affectionReplenishRate: 1
-  energy: 34.004494
+  energy: 36.23949
   energyTimerDecrease: 0.25
   energyReplenishRate: 3
-  hunger: 79.05375
+  hunger: 18.62187
   hungerTimerDecrease: 0.25
   hungerReplenishRate: 1
-  interest: 87.01032
+  interest: 27.983128
   interestTimerDecrease: 0.4
   interestReplenishRate: 1.5
   replenishAffection: 0
   replenishEnergy: 0
-  replenishHunger: 0
+  replenishHunger: 1
   replenishInterest: 0
-  playerMoney: 907175
+  playerMoney: 8

@@ -9,7 +9,7 @@ public class OnlineShop : MonoBehaviour
 {
     public DucklingStats stats;
 
-    public RigidbodyFirstPersonController playerController;
+    public FirstPersonController playerController;
 
     public float currentBalance, foodPrice, toyPrice;
 
@@ -18,6 +18,9 @@ public class OnlineShop : MonoBehaviour
     public TextMeshProUGUI currentBalanceText, purchaseStatusText, toyPriceText, foodPriceText, inputText;
     public GameObject shopPanel, frontDoorPos, inputPanel;
 
+    //public ObjectPositions objectPositions;
+
+    public Transform loadObjectsPosition;
 
 
 
@@ -29,6 +32,23 @@ public class OnlineShop : MonoBehaviour
         foodPriceText.text = "Buy Food - $" + foodPrice.ToString();
 
         shopPanel.SetActive(false);
+
+        //if (objectPositions.isLoaded)
+        //{
+        //    foreach (Vector3 position in objectPositions.foodPositions)
+        //    {
+        //        GameObject newFood = Instantiate(foodList[Random.Range(0, foodList.Count)], loadObjectsPosition.transform);
+        //        newFood.transform.parent = null;
+        //        newFood.transform.position = position;
+        //    }
+
+        //    foreach (Vector3 position in objectPositions.toyPositions)
+        //    {
+        //        GameObject newToy = Instantiate(toyList[Random.Range(0, toyList.Count)], loadObjectsPosition.transform);
+        //        newToy.transform.parent = null;
+        //        newToy.transform.position = position;
+        //    }
+        //}
     }
 
     void Update()

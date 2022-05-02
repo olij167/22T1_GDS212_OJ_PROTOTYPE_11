@@ -20,7 +20,7 @@ public class GoToBed : MonoBehaviour
 
     public TextMeshProUGUI lateText;
 
-    public RigidbodyFirstPersonController playerController;
+    public FirstPersonController playerController;
 
 
     void Start()
@@ -72,9 +72,10 @@ public class GoToBed : MonoBehaviour
 
     public void GoToSleep()
     {
-
+        lateText.text = "";
         blackScreen.enabled = true;
         playerController.enabled = false;
+        playerController.gameObject.GetComponent<ObjectSelection>().enabled = false;
         isAsleep = true;
 
         timeController.timeSpeed *= asleepTimeIncrease;
@@ -89,6 +90,7 @@ public class GoToBed : MonoBehaviour
         blackScreen.enabled = false;
         timeController.timeSpeed = timeSpeed;
         playerController.enabled = true;
+        playerController.gameObject.GetComponent<ObjectSelection>().enabled = true;
         isPastBedtime = false;
         isAsleep = false;
         hasSlept = true;

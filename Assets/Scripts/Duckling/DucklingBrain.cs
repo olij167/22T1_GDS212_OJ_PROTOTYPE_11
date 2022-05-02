@@ -79,8 +79,6 @@ public class DucklingBrain : MonoBehaviour
     {
         currentState = "Choosing Next State";
 
-        SaveSystem.SaveData(ducklingStats, time);
-
         if (!ducklingActions.isAsleep)
         {
             ducklingActions.SetEyesStatus();
