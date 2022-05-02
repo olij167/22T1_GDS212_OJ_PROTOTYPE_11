@@ -22,6 +22,9 @@ public class GoToBed : MonoBehaviour
 
     public FirstPersonController playerController;
 
+    public AudioSource audioSource;
+    public AudioClip alarmAudio;
+
 
     void Start()
     {
@@ -58,10 +61,22 @@ public class GoToBed : MonoBehaviour
             if (timeController.timeHours == 6 && timeController.timeMinutes >= 30f && !timeController.isPM)
             {
                 WakeUp();
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.PlayOneShot(alarmAudio, audioSource.volume);
+                }
             }
         }
         else if (isPastBedtime && isAsleep)
         {
+            if (timeController.timeHours == 6 && timeController.timeMinutes >= 30f && !timeController.isPM)
+            {
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.PlayOneShot(alarmAudio, audioSource.volume);
+                }
+            }
+
             if (timeController.timeHours == 8 && timeController.timeMinutes >= 30f && !timeController.isPM)
             {
                 lateText.text = "You slept in and are Late for work! get to bed earlier next time";

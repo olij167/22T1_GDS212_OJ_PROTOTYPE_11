@@ -29,10 +29,16 @@ public class DucklingBrain : MonoBehaviour
 
     //public ObjectPositions positions;
 
+    public List<AudioClip> chirpSounds;
+
+    private AudioSource audioSource;
+
+
 
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         Time.timeScale = 1;
         //ducklingStats = GetComponent<DucklingStats>(); 
         ducklingActions = GetComponent<DucklingActions>();
@@ -95,6 +101,8 @@ public class DucklingBrain : MonoBehaviour
                 hasEaten = false;
             }
         }
+
+        Chirp();
 
         GetLowestStat();
 
@@ -182,6 +190,16 @@ public class DucklingBrain : MonoBehaviour
             return lowestStatName = "Interest";
         }
         else return lowestStatName = "N/A";
+    }
+
+    public void Chirp()
+    {
+        int r = Random.Range(0, 6);
+
+        if (!audioSource.isPlaying && r == 0)
+        {
+            audioSource.PlayOneShot(chirpSounds[Random.Range(0, chirpSounds.Count)], audioSource.volume);
+        }
     }
 
     public void HungryState()

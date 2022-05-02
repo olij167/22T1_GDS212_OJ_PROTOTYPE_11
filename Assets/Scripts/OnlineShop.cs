@@ -22,7 +22,8 @@ public class OnlineShop : MonoBehaviour
 
     public Transform loadObjectsPosition;
 
-
+    public AudioSource audioSource;
+    public AudioClip doorbellAudio, declinedAudio;
 
     void Start()
     {
@@ -79,11 +80,21 @@ public class OnlineShop : MonoBehaviour
             GameObject newToy = Instantiate(toyList[Random.Range(0, toyList.Count)], frontDoorPos.transform);
             newToy.transform.parent = null;
 
-            // play doorbell sound effect
+            if (!audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(doorbellAudio, audioSource.volume);
+            }
 
             currentBalance -= toyPrice;
         }
-        else purchaseStatusText.text = "Insufficent Funds";
+        else
+        {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(declinedAudio, audioSource.volume);
+            }
+            purchaseStatusText.text = "Insufficent Funds";
+        }
     }
 
     public void BuyFood()
@@ -95,10 +106,20 @@ public class OnlineShop : MonoBehaviour
             GameObject newFood = Instantiate(foodList[Random.Range(0, foodList.Count)], frontDoorPos.transform);
             newFood.transform.parent = null;
 
-            // play doorbell sound effect
+            if (!audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(doorbellAudio, audioSource.volume);
+            }
 
             currentBalance -= foodPrice;
         }
-        else purchaseStatusText.text = "Insufficent Funds";
+        else
+        {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(declinedAudio, audioSource.volume);
+            }
+            purchaseStatusText.text = "Insufficent Funds";
+        }
     }
 }
