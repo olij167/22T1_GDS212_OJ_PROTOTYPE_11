@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a85a9f8451ffca14a969b2f511b25359, type: 3}
   m_Name: NullTutorial
   m_EditorClassIdentifier: 
-  tutorialIcon: {fileID: 0}
   tutorialInstructions: 
   tutorialStepComplete: 0
-  isLookAroundTutorial: 0
-  voiceOver: {fileID: 0}
-  tutorialInputList: 00000000
+  tutorialSlideDuration: 10
+  tutorialInputList: 20000000
+  inputString: Spacebar

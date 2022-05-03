@@ -23,13 +23,17 @@ public class MainMenuNavigation : MonoBehaviour
 
     public TimeSO time;
 
+    //public ParticleSystem duckParticles;
+
     private void Start()
     {
         //player.enabled = false;
         //tutorialUIController.enabled = false;
         Cursor.lockState = CursorLockMode.Confined;
 
-        Time.timeScale = 0f;
+        Time.timeScale = 1f;
+
+        //duckParticles.Play();
     }
 
     public void Continue()

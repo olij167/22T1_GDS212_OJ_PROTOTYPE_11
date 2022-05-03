@@ -321,14 +321,14 @@ public class DucklingBrain : MonoBehaviour
         ducklingActions.PlayWithObject();
     }
 
-    private void OnDrawGizmos()
-    {
-        if (Application.isPlaying)
-        {
-            Gizmos.color = stateColour;
-            Gizmos.DrawWireSphere(ducklingHead.position, ducklingStats.lookRadius);
+    //private void OnDrawGizmos()
+    //{
+    //    if (Application.isPlaying)
+    //    {
+    //        Gizmos.color = stateColour;
+    //        Gizmos.DrawWireSphere(ducklingHead.position, ducklingStats.lookRadius);
 
-            Handles.Label(transform.position, currentState);
-        }
-    }
+    //        Handles.Label(transform.position, currentState);
+    //    }
+    //}
 }

@@ -25,9 +25,12 @@ public class GoToBed : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip alarmAudio;
 
+    private ObjectSelection objectSelection;
 
     void Start()
     {
+        objectSelection = playerController.gameObject.GetComponent<ObjectSelection>();
+
         blackScreen.enabled = false;
         timeSpeed = timeController.timeSpeed;
         isAsleep = false;
@@ -38,14 +41,16 @@ public class GoToBed : MonoBehaviour
     
     void Update()
     {
-        if (!isAsleep && !hasSlept && timeController.isPM && timeController.timeHours > 9f || !isAsleep && !hasSlept && timeController.isPM && timeController.timeHours == 9 && timeController.timeMinutes > 30f)
+        if ((!isAsleep && timeController.isPM && timeController.timeHours > 9f) || (!isAsleep && timeController.isPM && timeController.timeHours == 9 && timeController.timeMinutes > 30f))
         {
+            lateText.enabled = true;
             isPastBedtime = true;
             lateText.text = "It's past your bedtime!";
         }
 
-        if (!isAsleep && !hasSlept && !timeController.isPM && timeController.timeHours >= 2)
+        if (!isAsleep && !hasSlept && !timeController.isPM && timeController.timeHours >= 2 && timeController.timeHours <= 6)
         {
+            lateText.enabled = true;
             isPastBedtime = true;
             lateText.text = "You passed out from exhaustion";
             GoToSleep();
@@ -87,10 +92,13 @@ public class GoToBed : MonoBehaviour
 
     public void GoToSleep()
     {
-        lateText.text = "";
+        if (lateText.text == "It's past your bedtime!")
+        {
+            lateText.text = "";
+        }
         blackScreen.enabled = true;
         playerController.enabled = false;
-        playerController.gameObject.GetComponent<ObjectSelection>().enabled = false;
+        objectSelection.enabled = false;
         isAsleep = true;
 
         timeController.timeSpeed *= asleepTimeIncrease;
@@ -105,7 +113,9 @@ public class GoToBed : MonoBehaviour
         blackScreen.enabled = false;
         timeController.timeSpeed = timeSpeed;
         playerController.enabled = true;
-        playerController.gameObject.GetComponent<ObjectSelection>().enabled = true;
+        Debug.Log("Time controller timespeed is: " + timeController.timeSpeed);
+        Debug.Log("Player controller is: [" + playerController.isActiveAndEnabled + "]");
+        objectSelection.enabled = true;
         isPastBedtime = false;
         isAsleep = false;
         hasSlept = true;

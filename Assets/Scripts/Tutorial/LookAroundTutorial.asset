@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a85a9f8451ffca14a969b2f511b25359, type: 3}
   m_Name: LookAroundTutorial
   m_EditorClassIdentifier: 
-  tutorialIcon: {fileID: 0}
   tutorialInstructions: Move the Mouse to Look Around
   tutorialStepComplete: 0
-  isLookAroundTutorial: 0
-  voiceOver: {fileID: 8300000, guid: 33453413a612f0c489b4a230e72bc9a1, type: 3}
-  tutorialInputList: 00000000
+  tutorialSlideDuration: 10
+  tutorialInputList: 20000000
+  inputString: Spacebar

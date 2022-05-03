@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ducklingName: bronson
   lookRadius: 2
-  affection: 62.03265
+  affection: 86.89633
   affectionTimerDecrease: 0.3
   affectionReplenishRate: 1
-  energy: 5.068895
+  energy: 3.1351178
   energyTimerDecrease: 0.25
   energyReplenishRate: 3
   hunger: 0
   hungerTimerDecrease: 0.25
   hungerReplenishRate: 1
-  interest: 63.099075
+  interest: 73.4744
   interestTimerDecrease: 0.4
   interestReplenishRate: 1.5
   replenishAffection: 0

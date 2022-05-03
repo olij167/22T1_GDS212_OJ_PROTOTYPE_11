@@ -56,13 +56,14 @@ public class OnlineShop : MonoBehaviour
     {
         if (shopPanel.activeSelf)
         {
+            currentBalance = stats.playerMoney;
             currentBalanceText.text = "Current Balance: " + currentBalance.ToString(".00");
 
             inputPanel.SetActive(true);
 
             inputText.text = "Press Spacebar to Close";
 
-            if (Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Cancel"))
             {
                 shopPanel.SetActive(false);
                 Cursor.lockState = CursorLockMode.Locked;
@@ -85,7 +86,7 @@ public class OnlineShop : MonoBehaviour
                 audioSource.PlayOneShot(doorbellAudio, audioSource.volume);
             }
 
-            currentBalance -= toyPrice;
+            stats.playerMoney -= toyPrice;
         }
         else
         {
@@ -111,7 +112,7 @@ public class OnlineShop : MonoBehaviour
                 audioSource.PlayOneShot(doorbellAudio, audioSource.volume);
             }
 
-            currentBalance -= foodPrice;
+            stats.playerMoney -= foodPrice;
         }
         else
         {

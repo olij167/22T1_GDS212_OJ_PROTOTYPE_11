@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityStandardAssets.Characters.FirstPerson;
+
 
 
 public class TutorialUIController : MonoBehaviour
 {
-    public Image tutorialIcon;
-    public TextMeshProUGUI tutorialInstructionsText;
+    //public Image tutorialIcon;
+    public TextMeshProUGUI tutorialInstructionsText, inputText;
     
     public List<TutorialUI> tutorialUIList;
     public int count = -1;
@@ -17,10 +18,29 @@ public class TutorialUIController : MonoBehaviour
 
     //Vector3 lastMousePos = Vector3.zero;
 
-    public AudioSource voiceOverSource;
+    //public AudioSource voiceOverSource;
+    public float tutorialSlideTimer;
+
+    public FirstPersonController playerController;
+
+    [HideInInspector] public ObjectSelection objectSelection;
+
+    public GameObject inputPanel, welcomeHomePanel;
+
+    public KeyCode skipTutorial;
 
     private void Start()
     {
+        objectSelection = playerController.transform.GetComponent<ObjectSelection>();
+        playerController.transform.GetComponent<GoToWork>().enabled = false;
+
+        //playerController.enabled = false;
+
+        objectSelection.enabled = false;
+        Time.timeScale = 0f;
+
+        inputPanel.SetActive(true);
+        welcomeHomePanel.SetActive(false);
         //lastMousePos = Input.mousePosition;
         //voiceOverSource = GetComponent<AudioSource>();
 
@@ -30,9 +50,24 @@ public class TutorialUIController : MonoBehaviour
 
     private void Update()
     {
-        if (!voiceOverSource.isPlaying && !tutorialComplete)
+        tutorialSlideTimer -= Time.deltaTime;
+        for (int i = 0; i < tutorialUIList.Count; i++)
+        {
+            foreach (KeyCode tutorialInput in tutorialUIList[i].tutorialInputList)
+            {
+                if (Input.GetKeyDown(tutorialInput))
+                {
+                    inputPerformed = true;
+
+                }
+            }
+        }
+
+        if ((tutorialSlideTimer <= 0f && !tutorialComplete) || (inputPerformed && !tutorialComplete))
         {
             count++;
+            inputPerformed = false;
+
             ProgressTutorial();
         }
 
@@ -44,27 +79,41 @@ public class TutorialUIController : MonoBehaviour
                 tutorialInstructionsText.enabled = false;
 
             }
+            playerController.enabled = true;
+            objectSelection.enabled = true;
+            Time.timeScale = 1f;
+            playerController.transform.GetComponent<GoToWork>().enabled = true;
+
 
             enabled = false;
             //gameObject.SetActive(false);
-            
+
+        }
+        else inputPanel.SetActive(true);
+
+        if (!tutorialComplete && Input.GetKeyDown(skipTutorial))
+        {
+            tutorialComplete = true;
         }
     }
 
     void ProgressTutorial()
     {
-        int i = count;
+        //int i = count;
 
-        if (i + 1 >= tutorialUIList.Count)
+        if (count + 1 >= tutorialUIList.Count)
         {
             tutorialComplete = true;
         }
 
-        tutorialIcon.sprite = tutorialUIList[i].tutorialIcon;
-        tutorialInstructionsText.text = tutorialUIList[i].tutorialInstructions;
+        //tutorialIcon.sprite = tutorialUIList[i].tutorialIcon;
+        tutorialInstructionsText.text = tutorialUIList[count].tutorialInstructions;
+        inputPanel.SetActive(true);
+        inputText.enabled = true;
+        inputText.text = "(Press " + tutorialUIList[count].inputString + " to continue," + "\n" + "Press " + skipTutorial.ToString() + " to skip tutorial)";
 
         //voiceOverSource.clip = tutorialUIList[i].voiceOver;
-        voiceOverSource.PlayOneShot(tutorialUIList[i].voiceOver);
+        //voiceOverSource.PlayOneShot(tutorialUIList[i].voiceOver);
 
         
 
@@ -73,11 +122,15 @@ public class TutorialUIController : MonoBehaviour
         //    i++;
         //}
 
-        if (!voiceOverSource.isPlaying)
+        if (tutorialSlideTimer <= 0f || inputPerformed)
         {
-            tutorialUIList[i].tutorialStepComplete = true;
+            tutorialUIList[count].tutorialStepComplete = true;
+            
             //i++;
         }
+
+        inputPerformed = false;
+        tutorialSlideTimer = tutorialUIList[count].tutorialSlideDuration;
 
     }
 

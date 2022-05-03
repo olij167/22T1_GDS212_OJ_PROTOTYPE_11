@@ -15,6 +15,7 @@ public class GameNavigation : MonoBehaviour
     public GameObject pauseUI;
     public FirstPersonController playerController;
     public ObjectPositions objectPositions;
+    public TutorialUIController tutorialController;
 
     //public Button saveButton, menuButton, quitButton;
 
@@ -92,5 +93,18 @@ public class GameNavigation : MonoBehaviour
 
         pauseUI.SetActive(false);
 
+    }
+
+    public void ReplayTutorial()
+    {
+        DisablePause();
+        tutorialController.objectSelection.enabled = false;
+        tutorialController.enabled = true;
+        tutorialController.tutorialInstructionsText.enabled = true;
+        tutorialController.inputPanel.SetActive(true);
+
+        tutorialController.count = -1;
+        tutorialController.tutorialComplete = false;
+        tutorialController.tutorialSlideTimer = 0f;
     }
 }

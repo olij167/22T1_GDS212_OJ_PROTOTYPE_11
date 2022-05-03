@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a85a9f8451ffca14a969b2f511b25359, type: 3}
-  m_Name: SprintTutorial
+  m_Name: Pause
   m_EditorClassIdentifier: 
-  tutorialInstructions: 'Sprint with Left Shift '
+  tutorialInstructions: Press Escape to pause, press it again to resume
   tutorialStepComplete: 0
   tutorialSlideDuration: 10
   tutorialInputList: 20000000

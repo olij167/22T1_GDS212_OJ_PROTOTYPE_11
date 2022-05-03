@@ -26,6 +26,7 @@ public class GoToWork : MonoBehaviour
     private ObjectSelection objectSelection;
 
     public GameObject getHomePanel, inputPanel;
+    private GameObject player;
     public TextMeshProUGUI incomeText, attendanceText, inputText, lateText;
     public bool wasEarly, wasLate;
 
@@ -35,9 +36,12 @@ public class GoToWork : MonoBehaviour
 
     public EndGame endGame;
 
+    public TutorialUIController tutorialController;
 
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+
         timeSpeed = timeController.timeSpeed;
         duckCam.enabled = false;
 
@@ -46,13 +50,20 @@ public class GoToWork : MonoBehaviour
 
         getHomePanel.SetActive(false);
         lateText.text = "";
+
+        currentDay = timeController.currentDay;
+
+        beenToWork = true;
     }
 
     void Update()
     {
-        if (!atWork && !beenToWork && !timeController.isPM && timeController.timeHours >= 8 || !atWork && !beenToWork && timeController.isPM)
+        if (!atWork && !beenToWork && currentDay != "Tuesday" && !tutorialController.enabled)
         {
-            lateText.text = "You're late for work!! Next time leave before 8 AM";
+            if ((!timeController.isPM && timeController.timeHours >= 8 ||  timeController.isPM))
+            {
+                lateText.text = "You're late for work!! Next time leave before 8 AM";
+            }
         }
 
         if (atWork && timeController.isPM && timeController.timeHours >= 5f && timeController.timeMinutes >= 30f)
@@ -98,11 +109,13 @@ public class GoToWork : MonoBehaviour
             playerController.enabled = false;
             playerController.gameObject.GetComponent<ObjectSelection>().enabled = false;
 
-            playerController.gameObject.transform.position = atWorkTransform.position;
+            //playerController.gameObject.transform.position = atWorkTransform.position;
+            Teleport(atWorkTransform.position);
             timeController.timeSpeed *= atWorkTimeIncrease;
 
             inputText.text = "Mike is at Work";
             lateText.text = "";
+            beenToWork = true;
             atWork = true;
 
         }
@@ -112,7 +125,7 @@ public class GoToWork : MonoBehaviour
     {
         if (atWork)
         {
-            playerController.gameObject.transform.position = frontDoorTransform.position;
+            
             mainCam.enabled = true;
             duckCamControls.enabled = false;
             duckCam.enabled = false;
@@ -152,7 +165,7 @@ public class GoToWork : MonoBehaviour
                 lateText.text = "";
             }
 
-            if (Input.GetButton("Jump"))
+            if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Cancel"))
             {
                 wasEarly = false;
                 wasLate = false;
@@ -160,7 +173,9 @@ public class GoToWork : MonoBehaviour
                 getHomePanel.SetActive(false);
                 Cursor.lockState = CursorLockMode.Locked;
                 playerController.enabled = true;
-                beenToWork = true;
+                //playerController.gameObject.transform.position = frontDoorTransform.position;
+                Teleport(frontDoorTransform.position);
+
                 currentDay = timeController.currentDay;
                 stats.playerMoney += incomeForDay;
                 playerController.gameObject.GetComponent<ObjectSelection>().enabled = true;
@@ -168,6 +183,12 @@ public class GoToWork : MonoBehaviour
             }
         }
 
+        
+    }
 
+    public void Teleport(Vector3 targetPosition)
+    {
+        Debug.Log("Teleported to [" + targetPosition + "]");
+        player.transform.position = targetPosition;
     }
 }
